@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Luna AI</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            height:100vh;
+
+            overflow:hidden;
+
+            font-family:'Segoe UI',sans-serif;
+
+            background:
+            radial-gradient(circle at top,#210022,#050505 70%);
+
+            color:white;
+
+            position:relative;
+        }
+
+        /* 🌌 animated particles */
+
+        body::before{
+
+            content:"";
+
+            position:absolute;
+
+            width:200%;
+            height:200%;
+
+            background:
+            radial-gradient(circle,rgba(255,0,120,0.18) 2px,transparent 2px);
+
+            background-size:85px 85px;
+
+            animation:moveBg 40s linear infinite;
+
+            z-index:-2;
+        }
+
+        @keyframes moveBg{
+
+            from{
+                transform:translate(0,0);
+            }
+
+            to{
+                transform:translate(-250px,-250px);
+            }
+        }
+
+        /* 🌈 glow orbs */
+
+        .orb{
+
+            position:absolute;
+
+            border-radius:50%;
+
+            filter:blur(90px);
+
+            opacity:0.35;
+
+            z-index:-1;
+        }
+
+        .orb1{
+
+            width:300px;
+            height:300px;
+
+            background:#ff0077;
+
+            top:-80px;
+            left:-80px;
+        }
+
+        .orb2{
+
+            width:250px;
+            height:250px;
+
+            background:#7700ff;
+
+            bottom:-70px;
+            right:-70px;
+        }
+
+        /* 🟣 side floating icons */
+
+        .left-panel{
+
+            position:absolute;
+
+            left:40px;
+            top:50%;
+
+            transform:translateY(-50%);
+
+            display:flex;
+            flex-direction:column;
+
+            gap:20px;
+        }
+
+        .feature{
+
+            width:80px;
+            height:80px;
+
+            border-radius:25px;
+
+            background:
+            rgba(255,255,255,0.06);
+
+            border:
+            1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(20px);
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            font-size:34px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+            position:relative;
+
+            box-shadow:
+            0 0 20px rgba(255,0,120,0.15);
+        }
+
+        .feature:hover{
+
+            transform:scale(1.08);
+
+            box-shadow:
+            0 0 40px rgba(255,0,120,0.5);
+        }
+
+        .tooltip{
+
+            position:absolute;
+
+            left:100px;
+
+            background:
+            rgba(0,0,0,0.8);
+
+            padding:12px 16px;
+
+            border-radius:15px;
+
+            width:220px;
+
+            opacity:0;
+
+            pointer-events:none;
+
+            transition:0.3s;
+
+            font-size:14px;
+
+            line-height:1.5;
+        }
+
+        .feature:hover .tooltip{
+
+            opacity:1;
+        }
+
+        /* 🎤 center */
+
+        .center{
+
+            position:absolute;
+
+            top:50%;
+            left:50%;
+
+            transform:translate(-50%,-50%);
+
+            width:700px;
+
+            text-align:center;
+        }
+
+        .title{
+
+            font-size:85px;
+
+            font-weight:700;
+
+            letter-spacing:2px;
+
+            text-shadow:
+            0 0 25px rgba(255,255,255,0.15);
+        }
+
+        .subtitle{
+
+            margin-top:15px;
+
+            opacity:0.75;
+
+            font-size:22px;
+        }
+
+        .online{
+
+            margin-top:15px;
+
+            color:#6dff7d;
+
+            font-size:18px;
+        }
+
+        /* 💬 chat */
+
+        .chat{
+
+            margin-top:40px;
+
+            height:220px;
+
+            overflow-y:auto;
+
+            display:flex;
+            flex-direction:column;
+
+            gap:15px;
+
+            padding:0 20px;
+        }
+
+        .chat::-webkit-scrollbar{
+            width:4px;
+        }
+
+        .chat::-webkit-scrollbar-thumb{
+            background:#ff0077;
+            border-radius:10px;
+        }
+
+        .message{
+
+            max-width:75%;
+
+            padding:16px 20px;
+
+            border-radius:22px;
+
+            line-height:1.5;
+
+            animation:fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translateY(10px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .user{
+
+            align-self:flex-end;
+
+            background:
+            linear-gradient(135deg,#ff006a,#ff4d4d);
+
+            border-bottom-right-radius:6px;
+        }
+
+        .bot{
+
+            align-self:flex-start;
+
+            background:
+            rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(20px);
+
+            border-bottom-left-radius:6px;
+        }
+
+        /* 🎤 mic */
+
+        .mic{
+
+            width:160px;
+            height:160px;
+
+            border-radius:50%;
+
+            background:
+            linear-gradient(145deg,#ff006a,#990000);
+
+            margin:50px auto 0;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            font-size:65px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+            box-shadow:
+            0 0 50px rgba(255,0,120,0.6);
+        }
+
+        .mic:hover{
+
+            transform:scale(1.08);
+
+            box-shadow:
+            0 0 100px rgba(255,0,120,1);
+        }
+
+        .mic.listening{
+
+            animation:pulse 1s infinite;
+        }
+
+        @keyframes pulse{
+
+            0%{
+                box-shadow:0 0 30px rgba(255,0,120,0.5);
+            }
+
+            50%{
+                box-shadow:0 0 120px rgba(255,0,120,1);
+            }
+
+            100%{
+                box-shadow:0 0 30px rgba(255,0,120,0.5);
+            }
+        }
+
+        .hint{
+
+            margin-top:20px;
+
+            opacity:0.55;
+
+            font-size:15px;
+        }
+
+        /* 🔵 right minimal info */
+
+        .right-panel{
+
+            position:absolute;
+
+            right:45px;
+            top:50%;
+
+            transform:translateY(-50%);
+
+            display:flex;
+            flex-direction:column;
+
+            gap:25px;
+        }
+
+        .mini-card{
+
+            width:180px;
+
+            padding:18px;
+
+            border-radius:22px;
+
+            background:
+            rgba(255,255,255,0.05);
+
+            border:
+            1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(20px);
+
+            text-align:left;
+        }
+
+        .mini-title{
+
+            color:#ff4da6;
+
+            margin-bottom:10px;
+
+            font-size:16px;
+        }
+
+        .mini-text{
+
+            opacity:0.75;
+
+            line-height:1.5;
+        }
+
+        .clock{
+
+            font-size:40px;
+
+            font-weight:700;
+        }
+
+        .typing{
+
+            display:inline-block;
+
+            width:8px;
+            height:8px;
+
+            border-radius:50%;
+
+            background:white;
+
+            margin-left:5px;
+
+            animation:blink 1s infinite;
+        }
+
+        @keyframes blink{
+
+            0%{
+                opacity:0.2;
+            }
+
+            50%{
+                opacity:1;
+            }
+
+            100%{
+                opacity:0.2;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="left-panel">
+
+    <div class="feature">
+
+        🎵
+
+        <div class="tooltip">
+            Play songs naturally.<br><br>
+            Example:<br>
+            "play mockingbird"
+        </div>
+
+    </div>
+
+    <div class="feature">
+
+        🌐
+
+        <div class="tooltip">
+            Search instantly.<br><br>
+            Example:<br>
+            "search gaming laptops"
+        </div>
+
+    </div>
+
+    <div class="feature">
+
+        🧠
+
+        <div class="tooltip">
+            Memory system enabled.<br><br>
+            Example:<br>
+            "my name is namith"
+        </div>
+
+    </div>
+
+    <div class="feature">
+
+        ⚡
+
+        <div class="tooltip">
+            Smart calculations.<br><br>
+            Example:<br>
+            "what is 4 x 3"
+        </div>
+
+    </div>
+
+</div>
+
+<div class="center">
+
+    <div class="title">
+        🌙 Luna
+    </div>
+
+    <div class="subtitle">
+        Futuristic AI Voice Assistant
+    </div>
+
+    <div class="online">
+        ● ONLINE
+    </div>
+
+    <div class="chat" id="chat">
+
+        <div class="message bot">
+            Hello. I'm Luna. How can I help you today?
+        </div>
+
+    </div>
+
+    <div class="mic" id="mic" onclick="start()">
+        🎤
+    </div>
+
+    <div class="hint">
+        Tap the mic and speak naturally
+    </div>
+
+</div>
+
+<div class="right-panel">
+
+    <div class="mini-card">
+
+        <div class="mini-title">
+            ⚡ AI STATUS
+        </div>
+
+        <div class="mini-text">
+            Voice systems active.
+        </div>
+
+    </div>
+
+    <div class="mini-card">
+
+        <div class="mini-title">
+            🕒 TIME
+        </div>
+
+        <div class="clock" id="clock">
+            00:00
+        </div>
+
+    </div>
+
+    <div class="mini-card">
+
+        <div class="mini-title">
+            🚀 BUILD
+        </div>
+
+        <div class="mini-text">
+            Luna AI v2
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let selectedVoice = null;
+
+function loadVoices(){
+
+    let voices = speechSynthesis.getVoices();
+
+    selectedVoice = voices.find(v =>
+        v.name.toLowerCase().includes("female") ||
+        v.name.toLowerCase().includes("zira") ||
+        v.name.toLowerCase().includes("samantha") ||
+        v.name.toLowerCase().includes("google uk english female")
+    );
+
+    if(!selectedVoice){
+
+        selectedVoice =
+        voices.find(v => v.lang.includes("en"))
+        || voices[0];
+    }
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+
+function speak(text){
+
+    if(!selectedVoice) loadVoices();
+
+    let speech =
+    new SpeechSynthesisUtterance(text);
+
+    speech.voice = selectedVoice;
+
+    speech.rate = 0.95;
+
+    speech.pitch = 1.15;
+
+    speechSynthesis.speak(speech);
+}
+
+function addMessage(text,type){
+
+    let chat =
+    document.getElementById("chat");
+
+    let div =
+    document.createElement("div");
+
+    div.classList.add("message");
+    div.classList.add(type);
+
+    div.innerText = text;
+
+    chat.appendChild(div);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping(){
+
+    let chat =
+    document.getElementById("chat");
+
+    let typing =
+    document.createElement("div");
+
+    typing.classList.add("message");
+    typing.classList.add("bot");
+
+    typing.id = "typing";
+
+    typing.innerHTML =
+    'Thinking<span class="typing"></span>';
+
+    chat.appendChild(typing);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping(){
+
+    let typing =
+    document.getElementById("typing");
+
+    if(typing){
+        typing.remove();
+    }
+}
+
+function start(){
+
+    let mic =
+    document.getElementById("mic");
+
+    mic.classList.add("listening");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        addMessage("Speech recognition is not supported in this browser. Please use Chrome or Edge.", "bot");
+        mic.classList.remove("listening");
+        return;
+    }
+
+    let recognition = new SpeechRecognition();
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+
+        let text =
+        event.results[0][0].transcript;
+
+        addMessage(text,"user");
+
+        addTyping();
+
+        fetch("http://127.0.0.1:5000/command",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                text:text
+            })
+
+        })
+
+        .then(res => res.json())
+
+        .then(data => {
+
+            removeTyping();
+
+            addMessage(data.response,"bot");
+
+            speak(data.response);
+
+            mic.classList.remove("listening");
+
+        })
+
+        .catch(() => {
+
+            removeTyping();
+
+            addMessage(
+                "Error connecting to Luna.",
+                "bot"
+            );
+
+            mic.classList.remove("listening");
+
+        });
+    };
+}
+
+function updateClock(){
+
+    let now = new Date();
+
+    let h =
+    String(now.getHours()).padStart(2,'0');
+
+    let m =
+    String(now.getMinutes()).padStart(2,'0');
+
+    document.getElementById("clock").innerText =
+    `${h}:${m}`;
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+</script>
+
+</body>
+</html>
