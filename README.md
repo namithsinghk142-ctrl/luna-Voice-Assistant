@@ -4,7 +4,7 @@ A futuristic AI voice assistant built using Python, Flask, HTML, CSS and JavaScr
 
 ---
 
-# 🚀 Features
+# 🚀 All Features
 
 - 🎤 Voice Recognition
 - 🌐 Smart Google Search
